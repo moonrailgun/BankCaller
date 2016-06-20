@@ -7,6 +7,7 @@ import time
 import os
 import urllib2,json
 from lxml import etree
+import get_cpu_temp
 
 class WeixinInterface:
 
@@ -47,6 +48,11 @@ class WeixinInterface:
 
         if content == u"排队":
             return self.render.reply_text(fromUser,toUser,int(time.time()),u"正在排队中。请稍后")
+        elif content == u"温度":
+            cpu_temp = get_cpu_temp.get_cpu_temp()
+            gpu_temp = get_cpu_temp.get_gpu_temp()
+            str = "服务器温度:\nCPU:%f\nGPU:%f" % (cpu_temp, gpu_temp)
+            return self.render.reply_text(fromUser,toUser,int(time.time()),str)
         elif content == u"翻译":
             return self.render.reply_text(fromUser,toUser,int(time.time()),u"请输入【翻译 文字】这样的格式")
         else:
