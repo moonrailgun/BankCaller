@@ -8,6 +8,8 @@ import os
 import urllib2,json
 from lxml import etree
 import get_cpu_temp
+from sqlInterface import SQLInterface
+from sqlInterface import CallerSQL
 
 class WeixinInterface:
 
@@ -47,7 +49,8 @@ class WeixinInterface:
         toUser=xml.find("ToUserName").text
 
         if content == u"排队":
-            return self.render.reply_text(fromUser,toUser,int(time.time()),u"正在排队中。请稍后")
+            serial = CallerSQL().addToQueue(fromUser)
+            return self.render.reply_text(fromUser,toUser,int(time.time()),u"正在排队中，您分配到的编号为%d。请稍后"%serial)
         elif content == u"温度":
             cpu_temp = get_cpu_temp.get_cpu_temp()
             gpu_temp = get_cpu_temp.get_gpu_temp()
