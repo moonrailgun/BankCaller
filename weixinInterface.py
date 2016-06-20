@@ -44,4 +44,15 @@ class WeixinInterface:
         msgType=xml.find("MsgType").text
         fromUser=xml.find("FromUserName").text
         toUser=xml.find("ToUserName").text
-        return self.render.reply_text(fromUser,toUser,int(time.time()),u"我现在还在开发中，还没有什么功能，您刚才说的是："+content)
+
+        if content == u"排队":
+            return self.render.reply_text(fromUser,toUser,int(time.time()),u"正在排队中。请稍后")
+        elif content == u"翻译":
+            return self.render.reply_text(fromUser,toUser,int(time.time()),u"请输入【翻译 文字】这样的格式")
+        else:
+            helpFile = open("help.txt")
+            try:
+                helpStr = helpFile.read()
+                return self.render.reply_text(fromUser,toUser,int(time.time()),helpStr)
+            finally:
+                helpFile.close()
