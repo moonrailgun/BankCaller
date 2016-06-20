@@ -51,7 +51,7 @@ class WeixinInterface:
         elif content == u"温度":
             cpu_temp = get_cpu_temp.get_cpu_temp()
             gpu_temp = get_cpu_temp.get_gpu_temp()
-            str = "服务器温度:\nCPU:%f\nGPU:%f" % (cpu_temp, gpu_temp)
+            str = "服务器温度:\nCPU:%.1f\nGPU:%.1f" % (cpu_temp, gpu_temp)
             return self.render.reply_text(fromUser,toUser,int(time.time()),str)
         elif content == u"翻译":
             return self.render.reply_text(fromUser,toUser,int(time.time()),u"请输入【翻译 文字】这样的格式")
