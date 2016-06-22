@@ -49,8 +49,14 @@ class WeixinInterface:
         toUser=xml.find("ToUserName").text
 
         if content == u"排队":
+            remain = CallerSQL().getUnfinishSerialCount()
             serial = CallerSQL().addToQueue(fromUser)
-            return self.render.reply_text(fromUser,toUser,int(time.time()),u"正在排队中，您分配到的编号为%d。请稍后"%serial)
+            msg = u"正在排队中，您分配到的编号为%d。"%serial
+            if(remain > 0):
+                msg += u"请稍后，您前方尚有%d人" % remain
+            else:
+                msg += u"工作窗口正空，请马上去窗口报道"
+            return self.render.reply_text(fromUser,toUser,int(time.time()),msg)
         elif content == u"温度":
             cpu_temp = get_cpu_temp.get_cpu_temp()
             gpu_temp = get_cpu_temp.get_gpu_temp()

@@ -87,6 +87,16 @@ def setup():
 def loop():
 	currentSerial = 0
 	blink()
+
+	# 显示当前要处理的编号
+	serial = CallerSQL().getUnfinishSerial()
+	if(not serial >= 0):
+		serial = 0
+	currentSerial = serial
+	print("系统启动。当前序列:%d" % currentSerial)
+	showNum(currentSerial)
+
+	#循环
 	while(True):
 		if(GPIO.input(Button_inputPin) == GPIO.LOW):
 			print("按钮按下")
@@ -96,13 +106,13 @@ def loop():
 						currentSerial -= 100
 
 					#从数据库获取
-					CallerSQL.finishOneSerial()
-					serial = CallerSQL.getUnfinishSerial()
-					if(not serial > 0):
+					CallerSQL().finishOneSerial()
+					serial = CallerSQL().getUnfinishSerial()
+					if(not serial >= 0):
 						serial = 0
-
 					currentSerial = serial
-					print("按钮弹起，当前序列:%d" % currentSerial)
+					remainPeople = CallerSQL().getUnfinishSerialCount()
+					print("按钮弹起，当前等待序列:%d，队列中还有%d人未处理" % (currentSerial,remainPeople))
 					showNum(currentSerial)
 					#currentSerial += 1
 					break

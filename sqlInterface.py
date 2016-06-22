@@ -55,10 +55,10 @@ class CallerSQL:
 	#获取未完成的序列个数
 	def getUnfinishSerialCount(self):
 		ret = SQLInterface().execute('SELECT COUNT(*) FROM we_chat WHERE is_finish = 0')
-		serial = ret[0][0]
-		if(serial == None):
-			serial = 0
-		return serial
+		num = ret[0][0]
+		if(num == None):
+			num = 0
+		return num
 
 
 if __name__ == '__main__':
