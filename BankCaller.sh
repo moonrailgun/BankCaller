@@ -1,0 +1,2 @@
+# (根据需要修改)
+screen -dmS Ngrok ~/Public/Ngrok/linux_arm/ngrok -config ~/Public/Ngrok/linux_arm/ngrok.cfg start weixin && screen -dmS webpy python ./webInterface.py && screen -dmS bankcaller python ./app.py
