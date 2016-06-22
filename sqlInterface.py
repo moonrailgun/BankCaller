@@ -40,6 +40,26 @@ class CallerSQL:
 			serial = 0
 		return serial
 
+	def getUnfinishSerial(self):
+		ret = SQLInterface().execute('SELECT MIN(serial_number) FROM we_chat WHERE is_finish = 0')
+		serial = ret[0][0]
+		if(serial == None):
+			serial = -1
+		return serial
+
+	#完成最近的一条序列
+	def finishOneSerial(self):
+		serial = self.getUnfinishSerial()
+		SQLInterface().execute('UPDATE we_chat SET is_finish = 1 WHERE serial_number = %d' % serial)
+	
+	#获取未完成的序列个数
+	def getUnfinishSerialCount(self):
+		ret = SQLInterface().execute('SELECT COUNT(*) FROM we_chat WHERE is_finish = 0')
+		serial = ret[0][0]
+		if(serial == None):
+			serial = 0
+		return serial
+
 
 if __name__ == '__main__':
 	SQLInterface().init()

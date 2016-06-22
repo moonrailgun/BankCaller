@@ -3,6 +3,8 @@
 import RPi.GPIO as GPIO
 import spidev
 import time
+from sqlInterface import SQLInterface
+from sqlInterface import CallerSQL
 
 Max7219_pinCS = 24
 Button_inputPin = 20
@@ -20,8 +22,8 @@ numList = [
 [0x00,0x3E,0x22,0x22,0x3E,0x22,0x22,0x3E],# 8
 [0x3E,0x22,0x22,0x3E,0x02,0x02,0x02,0x3E],# 9
 ]
-full = [0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff]
-clear = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
+full = [0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff] # 全亮
+clear = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00] # 全灭
 
 spi = spidev.SpiDev()
 spi.open(0,0)#bus, device
@@ -83,18 +85,26 @@ def setup():
 	initMAX7219()
 
 def loop():
-	num = 0
+	currentSerial = 0
 	blink()
 	while(True):
 		if(GPIO.input(Button_inputPin) == GPIO.LOW):
 			print("按钮按下")
 			while (True):
 				if(GPIO.input(Button_inputPin) == GPIO.HIGH):
-					if(num >= 100):
-						num -= 100
-					print("按钮弹起，显示数字%d" % num)
-					showNum(num)
-					num += 1
+					if(currentSerial >= 100):
+						currentSerial -= 100
+
+					#从数据库获取
+					CallerSQL.finishOneSerial()
+					serial = CallerSQL.getUnfinishSerial()
+					if(not serial > 0):
+						serial = 0
+
+					currentSerial = serial
+					print("按钮弹起，当前序列:%d" % currentSerial)
+					showNum(currentSerial)
+					#currentSerial += 1
 					break
 				time.sleep(0.1)
 		time.sleep(0.1)
