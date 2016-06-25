@@ -2,10 +2,11 @@
 
 import sqlite3
 import time
+import sys
 
 class SQLInterface:
 	def getConnect(self):
-		return sqlite3.connect('./db/data.db')
+		return sqlite3.connect(sys.path[0] +'/db/data.db')
 
 	def execute(self, sql):
 		conn = self.getConnect()
